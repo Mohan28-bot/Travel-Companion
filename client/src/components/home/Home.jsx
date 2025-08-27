@@ -14,9 +14,7 @@ function Home() {
           offering a holistic travel solution that addresses every aspect of
           trip planning and execution.
         </p>
-        <a href="#" id="a1">
-          Learn More &#8599;
-        </a>
+        <a href="#" onClick={(e) => { e.preventDefault(); /* handle click */ }}>Link</a>
         <div className="bts">
           <a href="/login" id="login_bt">
             Login

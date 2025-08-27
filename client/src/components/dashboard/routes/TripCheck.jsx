@@ -8,10 +8,7 @@ function TripCheck() {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
+  // ✅ define fetchTodos first
   const fetchTodos = async () => {
     try {
       const res = await axios.get(
@@ -23,19 +20,20 @@ function TripCheck() {
     }
   };
 
+  // ✅ run once on mount + whenever userid changes
+  useEffect(() => {
+    fetchTodos();
+  }, [userid]);
+
   const handleAddTodo = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `http://localhost:5000/store/checklist`,
-        {
-          checklist: inputValue,
-          userID: userid,
-          status: false // Set initial status as false
-        }
-      );
+      await axios.post("http://localhost:5000/store/checklist", {
+        checklist: inputValue,
+        userID: userid,
+        status: false,
+      });
       await fetchTodos();
-      console.log(response.data);
       setInputValue("");
     } catch (error) {
       console.error("Error adding todo:", error);
@@ -54,9 +52,9 @@ function TripCheck() {
   const handleToggleStatus = async (id, status) => {
     try {
       await axios.put(`http://localhost:5000/update/checklist/${id}`, {
-        status: !status // Toggle the status
+        status: !status,
       });
-      await fetchTodos(); // Fetch updated todos from the database
+      await fetchTodos();
     } catch (error) {
       console.error("Error toggling status:", error);
     }
@@ -83,13 +81,19 @@ function TripCheck() {
           <h2>My Checklist</h2>
           {todos.map((todo) => (
             <div className="list" key={todo._id}>
-                <input
-                  type="checkbox"
-                  checked={todo.status}
-                  onChange={() => handleToggleStatus(todo._id, todo.status)}
-                />
+              <input
+                type="checkbox"
+                checked={todo.status}
+                onChange={() => handleToggleStatus(todo._id, todo.status)}
+              />
               <div id="text">
-                <p style={{ textDecoration: todo.status ? "line-through" : "none" }}>{todo.checklist}</p>
+                <p
+                  style={{
+                    textDecoration: todo.status ? "line-through" : "none",
+                  }}
+                >
+                  {todo.checklist}
+                </p>
                 <div className="items">
                   <button onClick={() => handleDeleteTodo(todo._id)}>
                     <FaTrash />

@@ -6,9 +6,7 @@ const Card = ({ imageUrl, title, description, link }) => {
       </div>
       <h3>{title}</h3>
       <p>{description}</p>
-      <a href={link} target="_blank">
-        View More
-      </a>
+      <a href="..." target="_blank" rel="noreferrer">Link</a>
     </div>
   );
 };
